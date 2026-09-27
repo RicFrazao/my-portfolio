@@ -33,7 +33,7 @@
     <nav class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-camera-retro text-2xl text-sky-400"></i>
-            <span class="font-bold text-xl tracking-wide">STUDIO.GALLERY</span>
+            <span class="font-bold text-xl tracking-wide">MY.VIEW.GALLERY</span>
         </div>
 
         <!-- Lo-Fi Music Player Header Control -->
@@ -155,18 +155,18 @@
         }
 
         // 2. Render Main Gallery Grid
-        function renderGallery() {
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = photos.map(photo => `
-                <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-md">
-                    <img src="${photo.src}" class="w-full h-60 object-cover hover:scale-105 transition duration-300" alt="${photo.title}">
-                    <div class="p-4">
-                        <h3 class="font-bold text-lg">${photo.title}</h3>
-                        <p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${photo.location}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
+       function renderGallery() {
+    const grid = document.getElementById('gallery-grid');
+   grid.innerHTML = photos.map((photo, index) => `
+        <div onclick="openModal(photos[${index}])" class="cursor-pointer bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-md">
+            <img src="${photo.src}" class="w-full h-60 object-cover hover:scale-105 transition duration-300" alt="${photo.title}">
+            <div class="p-4">
+                <h3 class="font-bold text-lg">${photo.title}</h3>
+                <p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${photo.location}</p>
+            </div>
+        </div>
+    `).join('');
+}
 
         // 3. Tab Navigation
         function switchTab(tab) {
@@ -205,11 +205,64 @@
             audio.volume = val;
         }
 
-        // Initialize Page
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDailyBanner();
-            renderGallery();
-        });
+       // Functions to open/close pop-out modal
+function openModal(photo) {
+  const modal = document.getElementById('imageModal');
+  const modalImage = document.getElementById('modalImage');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalLocation = document.getElementById('modalLocation');
+
+  modalImage.src = photo.src;
+  modalImage.alt = photo.title;
+  modalTitle.textContent = photo.title;
+  modalLocation.textContent = photo.location;
+
+  modal.classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('imageModal').classList.add('hidden');
+}
+
+// Initialize Page
+window.addEventListener('DOMContentLoaded', () => {
+  loadDailyBanner();
+  renderGallery();
+
+  // Close button event
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+
+  // Close on background click
+  document.getElementById('imageModal').addEventListener('click', (e) => {
+    if (e.target.id === 'imageModal') closeModal();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+}); 
     </script>
+
+ <!-- Image Modal / Pop-out -->
+<div id="imageModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="relative max-w-5xl max-h-[90vh] w-full flex flex-col items-center justify-center">
+    
+    <!-- Close Button -->
+    <button id="closeModal" class="absolute -top-12 right-0 text-white text-3xl font-bold hover:text-gray-300 transition-colors cursor-pointer">
+      &times;
+    </button>
+    
+    <!-- Full Resolution Image -->
+    <img id="modalImage" src="" alt="" class="max-h-[80vh] w-auto max-w-full object-contain rounded-lg shadow-2xl">
+    
+    <!-- Image Details -->
+    <div class="mt-4 text-center text-white">
+      <h3 id="modalTitle" class="text-xl font-bold"></h3>
+      <p id="modalLocation" class="text-sm text-gray-300"></p>
+    </div>
+
+  </div>
+</div>   
 </body>
 </html>
