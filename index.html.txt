@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Studio & Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0f9ff', 500: '#0284c7', 600: '#0369a1', 900: '#0c4a6e' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .banner-3-1 {
+            width: 100%;
+            aspect-ratio: 3 / 1;
+            max-height: 400px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen transition-colors duration-200">
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-camera-retro text-2xl text-sky-400"></i>
+            <span class="font-bold text-xl tracking-wide">STUDIO.GALLERY</span>
+        </div>
+
+        <!-- Lo-Fi Music Player Header Control -->
+        <div class="flex items-center gap-3 bg-gray-800/80 border border-gray-700 px-3 py-1.5 rounded-full text-xs">
+            <button id="music-btn" onclick="toggleAudio()" class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center hover:bg-sky-400 transition">
+                <i id="music-icon" class="fa-solid fa-play ml-0.5"></i>
+            </button>
+            <div class="flex flex-col">
+                <span class="font-semibold text-gray-200">Lo-Fi Chill Beats</span>
+                <span id="music-status" class="text-[10px] text-gray-400">Click to play</span>
+            </div>
+            <input type="range" id="volume-control" min="0" max="1" step="0.05" value="0.3" onchange="adjustVolume(this.value)" class="w-16 accent-sky-400 cursor-pointer hidden sm:block ml-2">
+            <audio id="lofi-audio" loop src="https://stream.zeno.fm/f3wvbbqmdg8uv"></audio>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex items-center gap-6">
+            <button id="nav-gallery" onclick="switchTab('gallery')" class="text-sky-400 font-semibold border-b-2 border-sky-400 pb-1">Gallery</button>
+            <button id="nav-about" onclick="switchTab('about')" class="text-gray-400 hover:text-white transition pb-1">About Me</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- GALLERY SECTION -->
+        <div id="section-gallery" class="space-y-8">
+
+            <!-- 3:1 DAILY FEATURED BANNER -->
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl border border-gray-800 bg-gray-800">
+                <img id="daily-banner-img" src="" alt="Daily Featured Photo" class="banner-3-1 w-full transition-all duration-700 hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+                    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-sky-400 mb-1">
+                        <i class="fa-solid fa-calendar-day"></i> Photo of the Day
+                    </div>
+                    <h2 id="daily-banner-title" class="text-xl md:text-3xl font-bold text-white">Loading featured photo...</h2>
+                    <p id="daily-banner-location" class="text-xs md:text-sm text-gray-300 mt-1"><i class="fa-solid fa-location-dot mr-1"></i> Location</p>
+                </div>
+            </div>
+
+            <!-- Gallery Controls & Search -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <h1 class="text-2xl font-bold">Featured Works</h1>
+                <input type="text" id="search-input" onkeyup="filterGallery()" placeholder="Search photos..." class="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-sky-500 w-full md:w-64">
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Images dynamically rendered here -->
+            </div>
+        </div>
+
+        <!-- ABOUT ME SECTION -->
+        <div id="section-about" class="hidden space-y-12 py-6">
+            <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 text-center max-w-2xl mx-auto">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-sky-400 object-cover" alt="Profile Picture">
+                <h2 class="text-3xl font-bold mb-2">Jane Doe</h2>
+                <p class="text-sky-400 font-medium mb-4">Landscape & Architectural Photographer</p>
+                <p class="text-gray-300 text-sm leading-relaxed">Capturing raw light and subtle geometric patterns across natural and built environments.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Sample Portfolio Images (Update these paths to point to your local image files)
+        const photos = [
+            {
+                title: "Alpine Fog & Sunrise",
+                location: "Swiss Alps",
+                src: "images/photo1.jpg"
+            },
+            {
+                title: "Modern Glass Architecture",
+                location: "Tokyo, Japan",
+                src: "images/photo2.jpg"
+            },
+            {
+                title: "Golden Hour Coastal Cliffs",
+                location: "Big Sur, California",
+                src: "images/photo3.jpg"
+            }
+        ];
+
+        // 1. Daily Rotating Banner Logic
+        function loadDailyBanner() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 0);
+            const diff = now - startOfYear;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+
+            const photoIndex = dayOfYear % photos.length;
+            const featuredPhoto = photos[photoIndex];
+
+            document.getElementById('daily-banner-img').src = featuredPhoto.src;
+            document.getElementById('daily-banner-title').innerText = featuredPhoto.title;
+            document.getElementById('daily-banner-location').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${featuredPhoto.location}`;
+        }
+
+        // 2. Render Main Gallery Grid
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = photos.map(photo => `
+                <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-md">
+                    <img src="${photo.src}" class="w-full h-60 object-cover hover:scale-105 transition duration-300" alt="${photo.title}">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">${photo.title}</h3>
+                        <p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${photo.location}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. Tab Navigation
+        function switchTab(tab) {
+            if (tab === 'gallery') {
+                document.getElementById('section-gallery').classList.remove('hidden');
+                document.getElementById('section-about').classList.add('hidden');
+                document.getElementById('nav-gallery').className = "text-sky-400 font-semibold border-b-2 border-sky-400 pb-1";
+                document.getElementById('nav-about').className = "text-gray-400 hover:text-white transition pb-1";
+            } else {
+                document.getElementById('section-gallery').classList.add('hidden');
+                document.getElementById('section-about').classList.remove('hidden');
+                document.getElementById('nav-about').className = "text-sky-400 font-semibold border-b-2 border-sky-400 pb-1";
+                document.getElementById('nav-gallery').className = "text-gray-400 hover:text-white transition pb-1";
+            }
+        }
+
+        // 4. Audio Controls
+        const audio = document.getElementById('lofi-audio');
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+        const musicStatus = document.getElementById('music-status');
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                musicIcon.className = "fa-solid fa-pause";
+                musicStatus.innerText = "Playing...";
+            } else {
+                audio.pause();
+                musicIcon.className = "fa-solid fa-play ml-0.5";
+                musicStatus.innerText = "Paused";
+            }
+        }
+
+        function adjustVolume(val) {
+            audio.volume = val;
+        }
+
+        // Initialize Page
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDailyBanner();
+            renderGallery();
+        });
+    </script>
+</body>
+</html>
